@@ -1,0 +1,227 @@
+<div data-section-id="{{ section.id }}" data-section-type="featured-images">
+
+  {% assign sectionBorder = section.settings.border %}
+  {% assign textShadow = section.settings.text-shadow %}
+
+  {% if section.blocks.size == 0 %}
+    {% assign featureCount = 2 %}
+  {% else %}
+    {% assign featureCount = 0 %}
+    {% for block in section.blocks %}
+      {% assign featureCount = featureCount | plus: 1 %}
+    {% endfor %}
+  {% endif %}
+
+  <div class="home-module home-feature-row
+    row-of-{{featureCount}} text-shadows-{{ textShadow }}
+    {% if sectionBorder %}has-border{% endif %}">
+
+    <div class="home-module-content {% if section.settings.title != blank %}home-module-has-heading{% endif %} swiper mySwiper">
+
+      <div class="swiper-wrapper home-journal_slider">
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            {% assign textAbove = block.settings.text-above | escape %}
+            {% assign heading = block.settings.title | escape %}
+             {% assign buttontext = block.settings.buttonText | escape %}
+              {% assign buttonurl = block.settings.button_link | escape %}
+            {% assign textBelow = block.settings.text-below | escape %}
+            {% assign url = block.settings.url %}
+      <div class="swiper-slide home-feature" data-swiper-autoplay="2000"> 
+          <div class="image_container">
+            {% if block.settings.image != blank %}
+              <img 
+                class="image"
+                src="{{ block.settings.image | image_url }}" 
+                loading="lazy" 
+                height="{{ block.settings.image.height }}" 
+                width="{{ block.settings.image.width }}"
+              />
+            {% else %}
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+              </div>  
+              {% if textAbove != blank or heading != blank or textBelow != blank %}
+                <div class="home-feature-content text-color-{{ textColor }} text-positioned-{{ textPosition }} rte">
+                  {% if textAbove != blank %}
+                    <p>{{ textAbove }}</p>
+                  {% endif %}
+
+                  {% if heading != blank %}
+                    <h3>{{ heading }}</h3>
+                  {% endif %}
+                  {% if heading != blank %}
+                    <a href="{{ buttonurl }}">{{ buttontext }}</a>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+      
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+  <script>
+     var swiper = new Swiper(".mySwiper", {
+      slidesPerView: 3,
+      spaceBetween: 30,
+      centeredSlides: false,
+      pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+      },
+      autoplay: {
+      delay: 5000,
+    },
+     breakpoints: {
+    375: {
+      slidesPerView: 1,
+      spaceBetween: 20,
+    },
+     480: {
+      slidesPerView: 2,
+      spaceBetween: 30
+    },
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 30
+    }
+  }
+    });
+    // var marg = ($(window).width()-960)/2;
+    // $('.home-module-content').css({'margin-left':-marg+'px'});
+</script>
+{% schema %}
+{
+  "name": "Image Text Slider",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Image gallery"
+    },
+    {
+      "type": "checkbox",
+      "id": "border",
+      "label": "Show border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "text-shadow",
+      "label": "Show text shadow",
+      "info": "Only appears when \"text shade\" is set to \"light\"."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1440 x 640px .jpg recommended"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Image with text"
+        },
+        {
+            "type": "text",
+             "id": "buttonText",
+             "label": "Button Text"
+        },
+        {
+          "type": "url",
+          "label": "Button Link",
+          "id": "button_link"
+        },
+        {
+          "type": "text",
+          "id": "text-above",
+          "label": "Subheading",
+          "default": "Subheading"
+        },
+        {
+          "type": "text",
+          "id": "text-below",
+          "label": "Text",
+          "default": "Text"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "text-color",
+          "label": "Text shade",
+          "options": [
+            {
+              "value": "light",
+              "label": "Light"
+            },
+            {
+              "value": "dark",
+              "label": "Dark"
+            }
+          ],
+          "default": "light"
+        },
+        {
+          "type": "select",
+          "id": "text-position",
+          "label": "Align text",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center",
+          "info": "Will default to \"center\" if three features are shown in a row."
+        }
+      ]
+    },
+    {
+      "type": "image_module_link",
+      "name": "Image Module Link",
+      "settings": [
+        
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Image",
+      "name": "Image Text Slider",
+      "blocks": [
+        {
+          "type": "feature"
+        },
+        {
+          "type": "feature"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
